@@ -1,0 +1,18 @@
+{
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+  "type": "@type",
+  "sp": "http://spinrdf.org/sp#",
+  "spa": "http://meta-sparql.org/vocab/spa#",
+  "query": "sp:Query",
+  "union": "sp:Union",
+  "bgp": "spa:BGP",
+  "variable": "sp:Variable",
+  "varName": "sp:varName",
+  "where": {"@id": "sp:where", "@container": "@list"},
+  "triples": "spa:tuple",
+  "patterns": {"@id": "sp:elements", "@container": "@list"},
+  "subject": "sp:subject",
+  "predicate": "sp:predicate",
+  "object": "sp:object"
+}

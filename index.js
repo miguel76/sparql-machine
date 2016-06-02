@@ -1,13 +1,8 @@
 // var sparqljs = require('sparqljs');
-var jsonld = require('jsonld'),
-    fs = require('fs'),
-    prettyjson = require('prettyjson'),
-    N3 = require('n3'),
-    _ = require('lodash');
-
-var spinContext = JSON.parse(fs.readFileSync('./context/spin.jsonld', 'utf8'));
-
-var baseURI = "http://example.org/query/";
+var prettyjson = require('prettyjson'),
+    sparqljs2spinPlus = require('./lib/sparqljs2spinPlus'),
+    rdfstore = require('rdfstore'),
+    fs = require('fs');
 
 // Parse a SPARQL query to a JSON object
 var SparqlParser = require('sparqljs').Parser;
@@ -32,36 +27,17 @@ var parsedQuery = parser.parse(
     '}. ' +
   '}');
 
-var varsBaseURI = baseURI + "vars/";
+var queryAsSpinPlus = sparqljs2spinPlus(parsedQuery);
 
-var isVar = function(term) {
-  return term && term[0] === '?';
-};
+console.log(prettyjson.render(queryAsSpinPlus));
 
-var convertN3 = function(parseTree) { return (
-  _.isArray(parseTree) ? _.map(parseTree, convertN3) :
-  !_.isObject(parseTree) ? parseTree :
-  _.mapValues(parseTree, function(value, key) { return (
-    _.indexOf(['subject', 'predicate', 'object'], key) === -1 ? convertN3(value) :
-    isVar(value) ? {'@id': '_:vars_' + value.substr(1), 'type': 'variable', 'varName': value.substr(1)} :
-    N3.Util.isIRI(value) || N3.Util.isBlank(value) ? {'@id': value} :
-    N3.Util.getLiteralLanguage(value) ? {'@value': value, '@language': N3.Util.getLiteralLanguage(value)} :
-    N3.Util.getLiteralType(value) ? {'@value': value, '@type': N3.Util.getLiteralType(value)} :
-    value );
-  }));
-};
-
-parsedQuery = convertN3(parsedQuery);
-
-console.log(prettyjson.render(parsedQuery));
-
-jsonld.expand(parsedQuery, { expandContext: spinContext }, function(err, expanded) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(prettyjson.render(expanded));
-  }
-});
+// jsonld.expand(parsedQuery, { expandContext: spinContext }, function(err, expanded) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(prettyjson.render(expanded));
+//   }
+// });
 
 // jsonld.toRDF(parsedQuery, { expandContext: spinContext }, function(err, internal) {
 //   if (err) {
@@ -70,3 +46,13 @@ jsonld.expand(parsedQuery, { expandContext: spinContext }, function(err, expande
 //     console.log(prettyjson.render(internal));
 //   }
 // });
+
+var spinPlus2spaAsUpdate = JSON.parse(fs.readFileSync('./update/spinPlus2spa.ru', 'utf8'));
+
+rdfstore.create(function(err, store) {
+  store.load('application/ld+json', queryAsSpinPlus, function(err, results) {
+    console.log(prettyjson.render(results));
+    store.execute(spinPlus2spaAsUpdate, function(err) {
+    });
+  });
+});
