@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/miguel76/sparql-machine#readme",
   "dependencies": {
+    "async": "^2.0.0-rc.5",
     "jsonld": "^0.4.11",
     "lodash": "^4.13.1",
     "n3": "^0.4.5",

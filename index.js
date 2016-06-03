@@ -1,8 +1,10 @@
 // var sparqljs = require('sparqljs');
 var prettyjson = require('prettyjson'),
     sparqljs2spinPlus = require('./lib/sparqljs2spinPlus'),
+    rdfstore2quads = require('./lib/rdfstore2quads'),
     rdfstore = require('rdfstore'),
-    fs = require('fs');
+    fs = require('fs'),
+    async = require('async');
 
 // Parse a SPARQL query to a JSON object
 var SparqlParser = require('sparqljs').Parser;
@@ -47,12 +49,20 @@ console.log(prettyjson.render(queryAsSpinPlus));
 //   }
 // });
 
-var spinPlus2spaAsUpdate = JSON.parse(fs.readFileSync('./update/spinPlus2spa.ru', 'utf8'));
+var spinPlus2spaAsUpdate = fs.readFileSync('./update/spinPlus2spa.ru', 'utf8');
 
-rdfstore.create(function(err, store) {
-  store.load('application/ld+json', queryAsSpinPlus, function(err, results) {
-    console.log(prettyjson.render(results));
-    store.execute(spinPlus2spaAsUpdate, function(err) {
-    });
+async.autoInject({
+  store: [rdfstore.create],
+  load: function(store, callback) {
+    store.load('application/ld+json', queryAsSpinPlus, callback);
+  },
+    // console.log(prettyjson.render(results));
+  update: function(store, load, callback) {
+    store.execute(spinPlus2spaAsUpdate, callback);
+  },
+  quads: function(store, update, callback) {
+    rdfstore2quads(store, callback);
+  }}, function(err, result) {
+    if (err) { console.error(err); }
+    else { console.log(result.quads); }
   });
-});
