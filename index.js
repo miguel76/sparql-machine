@@ -53,15 +53,16 @@ var spinPlus2spaAsUpdate = fs.readFileSync('./update/spinPlus2spa.ru', 'utf8');
 
 async.autoInject({
   store: [rdfstore.create],
-  load: function(store, callback) {
-    store.load('application/ld+json', queryAsSpinPlus, callback);
+  load: function(store, cb) {
+    store.load('application/ld+json', queryAsSpinPlus, cb);
   },
     // console.log(prettyjson.render(results));
-  update: function(store, load, callback) {
-    store.execute(spinPlus2spaAsUpdate, callback);
+  update: function(store, load, cb) {
+    store.execute(spinPlus2spaAsUpdate, cb);
   },
-  quads: function(store, update, callback) {
-    rdfstore2quads(store, callback);
+  quads: function(store, update, cb) {
+    console.log(update);
+    rdfstore2quads(store, cb);
   }}, function(err, result) {
     if (err) { console.error(err); }
     else { console.log(result.quads); }
