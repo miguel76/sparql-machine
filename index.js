@@ -73,9 +73,9 @@ async.autoInject({
     store.execute(spinPlus2spaAsUpdate, cb);
   },
   quads: function(store, update, cb) {
-    // console.log(store);
     rdfstore2quads(store, cb);
+    // cb(store);
   }}, function(err, result) {
-    if (err) { console.error(err); }
+    if (err) { console.error(prettyjson.render(err)); }
     else { console.log(result.quads);  }
   });

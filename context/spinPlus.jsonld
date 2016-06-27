@@ -1,12 +1,33 @@
 {
   "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
   "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-  "type": "@type",
   "sp": "http://spinrdf.org/sp#",
   "spa": "http://meta-sparql.org/vocab/spa#",
-  "query": "sp:Query",
-  "union": "sp:Union",
+
+  "type": "@type",
+  "queryTypeB": "@type",
+
   "bgp": "spa:BGP",
+
+  "query": "sp:Query",
+  "ASK": "sp:Ask",
+  "SELECT": "sp:Select",
+  "DESCRIBE": "sp:Describe",
+  "CONSTRUCT": "sp:Construct",
+
+  "group": "sp:ElementList",
+  "filter": "sp:Filter",
+  "optional": "sp:Optional",
+  "union": "sp:Union",
+
+  "namedGraph": "sp:NamedGraph",
+  "subQuery": "sp:SubQuery",
+  "notExists": "sp:NotExists",
+  "minus": "sp:Minus",
+  "service": "sp:Service",
+  "values": "sp:Values",
+
+  "variables": "sp:resultVariables",
   "variable": "sp:Variable",
   "varName": "sp:varName",
   "where": {"@id": "sp:where", "@container": "@list"},
