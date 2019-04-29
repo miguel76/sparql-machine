@@ -51,7 +51,12 @@ console.log(prettyjson.render(queryAsSpinPlus));
 //   }
 // });
 
-var spinPlus2spaAsUpdate = fs.readFileSync('./update/spinPlus2spa.ru', 'utf8');
+var spinPlus2spaAsUpdate = fs.readFileSync('./update/spinPlus2spa1.ru', 'utf8');
+var parsedUpdate = parser.parse(spinPlus2spaAsUpdate)
+var updateAsSpinPlus = sparqljs2spinPlus(parsedUpdate);
+console.log(prettyjson.render(updateAsSpinPlus));
+
+
 // console.log(spinPlus2spaAsUpdate);
 
 // spinPlus2spaAsUpdate = 'INSERT {<http://example.org/s> <http://example.org/p> <http://example.org/o>.} WHERE {?s ?p ?o};';
