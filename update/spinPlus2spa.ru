@@ -12,8 +12,12 @@ INSERT {
   ?union
     a sp:Union ;
     sp:elements ?list .
-  ?list rdf:rest* ?memberOfList .
-  ?memberOfList rdf:first ?memberOfUnion .
+    {
+      ?list rdf:rest+ ?memberOfList .
+      ?memberOfList rdf:first ?memberOfUnion .
+    } UNION {
+      ?list rdf:first ?memberOfUnion .
+    }
 };
 
 # TODO: GraphGraphPattern
@@ -26,7 +30,7 @@ INSERT {
     spa:next ?list .
 } WHERE {
   ?element sp:elements ?list .
-  FILTER NOT EXIST { element a sp:Union }
+  FILTER NOT EXISTS { ?element a sp:Union }
 };
 
 INSERT {
@@ -37,7 +41,7 @@ INSERT {
   ?element sp:elements ?list .
   ?list rdf:rest* ?lastItemList .
   ?lastItemList rdf:rest rdf:nil .
-  FILTER NOT EXIST { element a sp:Union }
+  FILTER NOT EXISTS { ?element a sp:Union }
 };
 
 #   - OPTIONAL
@@ -48,11 +52,11 @@ INSERT {
     spa:rightOp ?optionalElements
 } WHERE {
   ?currOp spa:next ?list .
-  ?list rdf:first optional .
+  ?list rdf:first ?optional .
   ?optional
     a sp:Optional;
     sp:elements ?optionalElements .
-};
+}
 
 # 18.2.2.7 Filters of Group
 # INSERT {
